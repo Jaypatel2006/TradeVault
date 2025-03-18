@@ -3,7 +3,7 @@
 import { motion, useAnimation } from "framer-motion";
 import { Roboto } from "next/font/google";
 import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./button.jsx";
 import { Card, CardContent } from "./card.jsx";
 import Link from "next/link";
@@ -19,17 +19,25 @@ const conn = await connectdb();
 console.log(conn);
 
 export default function Home() {
-  
+  const [products,setproducts] = useState([]);
   // Intersection observer for scroll-triggered animations (repeated)
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.15 }); // trigger animations repeatedly
   const animationControl = useAnimation();
-
+  
   useEffect(() => {
     if (inView) {
       animationControl.start("visible");
     } else {
       animationControl.start("hidden");
     }
+    const fetchproducts = async()=>{
+      const data= await fetch('/api/getproducts')
+      const response = await data.json();
+      setproducts(response.products);
+      console.log(response.products);
+    }
+    fetchproducts();
+
   }, [inView, animationControl]);
 
   // Variants for sections
@@ -114,30 +122,48 @@ export default function Home() {
         </motion.section>
 
         {/* Trending Products */}
-        <motion.section
-          ref={ref}
-          variants={staggerContainer}
-          initial="hidden"
-          animate={animationControl}
-          className="p-4 md:p-6"
+<motion.section
+  ref={ref}
+  variants={staggerContainer}
+  initial="hidden"
+  animate={animationControl}
+  className="p-4 md:p-6"
+>
+  <h2 className="text-2xl font-bold text-center mb-10 sm:text-3xl">
+    Trending Products
+  </h2>
+  {products.length === 0 ? (
+    <p className="text-center text-gray-500">No products available.</p>
+  ) : (
+    <motion.div
+      className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      variants={staggerContainer}
+    >
+      {products.map((product, idx) => (
+        <motion.div
+          key={idx}
+          variants={cardVariants}
+          className="p-4 bg-white shadow-xl rounded-2xl transition-transform transform hover:scale-105"
         >
-          <h2 className="text-2xl font-bold text-center mb-4 sm:text-3xl">
-            Trending Products
-          </h2>
-          <motion.div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" variants={staggerContainer}>
-            {[...Array(8)].map((_, index) => (
-              <motion.div key={index} variants={cardVariants}>
-                <Card className="hover:shadow-lg transition-shadow">
-                  <CardContent className="p-4">
-                    <div className="h-32 bg-gray-300 rounded-xl mb-4 sm:h-40"></div>
-                    <p className="text-sm font-bold sm:text-base">Product {index + 1}</p>
-                    <p className="text-sm">$99.99</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.section>
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-52 object-cover rounded-xl"
+          />
+          <div className="p-4">
+            <h2 className="text-lg font-bold text-black">{product.name}</h2>
+            <p className="text-gray-700 mt-2">{product.description}</p>
+            <div className="flex justify-between items-center mt-4">
+              <span className="text-blue-600 font-semibold">₹ {product.price}</span>
+              <button className="btn btn-primary">Buy Now</button>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </motion.div>
+  )}
+</motion.section>
+
       </div>
     </>
   );

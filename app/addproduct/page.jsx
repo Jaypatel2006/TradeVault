@@ -91,7 +91,7 @@ const AddProductForm = () => {
     } catch (error) {
       toast({ description: "An error occurred. Try again later." });
     } finally {
-      
+      setLoading(false);
     }
   };
 
