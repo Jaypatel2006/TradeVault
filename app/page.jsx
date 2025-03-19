@@ -72,7 +72,7 @@ export default function Home() {
       <div className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
         {/* Hero Section */}
         <motion.section
-          className="flex flex-col items-center justify-center h-[80vh] px-4 text-center text-white bg-gradient-to-r from-blue-800 to-black sm:h-screen"
+          className="flex flex-col items-center justify-center h-[80vh] px-4 text-center text-white bg-[url('/cartbg.avif')] sm:h-screen bg-cover"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: "easeInOut" }}
@@ -86,7 +86,9 @@ export default function Home() {
           <Button className="bg-blue-800 text-blue-500 px-4 py-2 rounded-xl font-semibold cursor-pointer">
             <Link href="/addproduct">Add Your Product</Link>
           </Button>
-          <button className="btn btn-success mt-4"><Link href="/products">Explore Products</Link></button>
+          <Button className="bg-blue-800 text-blue-500 px-4 py-2 rounded-xl font-semibold cursor-pointer mt-4">
+            <Link href="/products">Explore Products</Link>
+          </Button>
         </motion.section>
 
         {/* Explore Categories */}

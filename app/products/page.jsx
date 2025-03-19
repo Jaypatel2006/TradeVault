@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '../card.jsx';
-import { Button } from '../button.jsx';
+
 import { motion } from "framer-motion";
 
 // Card animation variants
@@ -17,7 +16,7 @@ const ProductListingPage = () => {
   const categories = ['All', 'Electronics', 'Fashion', 'Home Appliances', 'Books'];
 
   useEffect(() => {
-    // Fetch products from the API
+    
     const fetchProducts = async () => {
       try {
         const data = await fetch('/api/getproducts');
